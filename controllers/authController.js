@@ -31,6 +31,9 @@ module.exports = {
                     if(err1) {
                         throw err1
                     }
+                    res.send({
+                        username
+                    })
                     var linkverifikasi = `http://localhost:3000/verified?username=${username}&password=${hashPassword}`;
                     var mailOption = {
                         from: 'TravelID <travelid2019@gmail.com>',
@@ -47,31 +50,43 @@ module.exports = {
                             throw err2
                         }
                         else {
-                            res.send('Success')
-                            res.send({username, email, role:'User', status:'Unverified'})
+                            // res.send('Success')
+                            res.send({username, email, password, role:'User', status:'Unverified'})
                         }
                     })
                 })
             }
         })
     },
-    signin: (req,res) => {
-
+    login: (req,res) => {
+        var { username, password } = req.body;
+        var hashPassword = Crypto.createHmac('sha256', 'abc123').update(password).digest('hex');
+        var sql = `select * from user where username='${username}' and password='${hashPassword}'`;
+        conn.query(sql, (err,results)=> {
+            if(err) throw err;
+            // console.log(err)
+            if (results.length > 0){
+                console.log(results)
+                res.send(results)
+            }
+            else {
+                res.send ({status: 'error', message: 'Username or password invalid'})
+            } 
+        })
     },
     verified: (req,res) => {
         var { username, password } = req.body;
         var sql = `select * from user where username='${username}' and password='${password}'`;
-        conn.query(sql, (err,results)=> {
+        conn.query(sql, (err,results1)=> {
             if(err) throw err;
-
-            if(results.length > 0){
-                sql = `update user set status='Verified' where id=${results[0].id}`;
+            console.log(results1)
+            if(results1.length > 0){
+                sql = `update user set status='Verified' where id=${results1[0].id}`;
                 conn.query(sql, (err1,res1) => {
                     if(err1) throw err1;
                     res.send({
-                        username, 
-                        email: results[0].email,
-                        role: results[0].role,
+                        username: results1[0].username,
+                        role: results1[0].role,
                         status: 'Verified'
                     })
                 })
@@ -79,6 +94,21 @@ module.exports = {
             else {
                 throw 'User not exist!'
             }
+        })
+    },
+    keeplogin: (req,res) => {
+        var { username } = req.body;
+        var sql = `select * from user where username='${username}' and password='${hashPassword}'`;
+        conn.query(sql, (err,results)=> {
+            if(err) throw err;
+            // console.log(err)
+            if (results.length > 0){
+                console.log(results)
+                res.send(results)
+            }
+            else {
+                res.send ({status: 'error', message: 'Error!'})
+            } 
         })
     }
 }

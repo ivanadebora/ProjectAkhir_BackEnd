@@ -8,4 +8,4 @@ const conn = mysql.createConnection({
     port: 3306
 });
 
-module.exports = conn
+module.exports = conn;

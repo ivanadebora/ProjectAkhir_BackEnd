@@ -1,14 +1,14 @@
-var express = require('express');
-var cors = require('cors');
+const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const Crypto = require('crypto');
 
 
-var app = express();
+const app = express();
 app.use(cors())
 app.use(bodyParser.json())
 
-var port = process.env.PORT || 1212;
+const port = process.env.PORT || 1212;
 
 app.get('/', (req,res) => {
     res.send('<h1>Selamat Datang di API!</h1>')
