@@ -21,8 +21,12 @@ app.get('/passwordencrypt', (req,res) => {
     res.send(`Password anda ${req.query.password} di encrypt menjadi ${hashPassword}`)
 })
 
-var { authRouter } = require('./routers')
+var { 
+    authRouter,
+    flightRouter 
+} = require('./routers')
 app.use('/auth', authRouter)
+app.use('/flight', flightRouter)
 
 
 app.listen(port, () => console.log('API aktif di port ' + port))

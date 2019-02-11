@@ -67,7 +67,17 @@ module.exports = {
             // console.log(err)
             if (results.length > 0){
                 console.log(results)
-                res.send(results)
+                // res.send(results)
+                var dataLogin = { 
+                    lastlogin: new Date()
+                }
+                sql = `update user set ? where username='${username}' and password='${hashPassword}'`;
+                conn.query(sql, dataLogin, (err1, res1) => {
+                    if(err1) throw err1
+                    console.log(res1)
+                    console.log(results)
+                    res.send(results)
+                })
             }
             else {
                 res.send ({status: 'error', message: 'Username or password invalid'})
