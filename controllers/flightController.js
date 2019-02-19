@@ -14,7 +14,7 @@ module.exports = {
     },
     addmaskapai: (req, res) => {
         try {
-            const path = '/flight/images';
+            const path = '/flights/images';
             const upload = uploader(path, 'FLI').fields([{ name: 'image'}]);
     
             upload(req, res, (err) => {
@@ -62,7 +62,7 @@ module.exports = {
             if(err) throw err;
     
             if(results.length > 0) {
-                const path = '/flight/images';
+                const path = '/flights/images';
                 const upload = uploader(path, 'FLI').fields([{ name: 'image'}]);
     
                 upload(req, res, (err) => {
@@ -147,15 +147,99 @@ module.exports = {
         })   
     },
     listproduct: (req, res) => {
-
+        var sql = `select fp.id, code, nama, departure_city, arrival_city, tanggal,
+                    departure_time, arrival_time, departure_terminal, arrival_terminal,
+                    seat_class, harga, jumlah_seat
+                    from maskapai m
+                    join flight_product fp
+                    on m.id = fp.idmaskapai;`;
+        conn.query(sql, (err, results) => {
+            if(err) throw err;
+            console.log(results);
+            res.send(results);
+        }) 
     },
     addproduct: (req, res) => {
-
+        var { code, nama, departure_city, arrival_city, tanggal, departure_time, arrival_time,
+            departure_terminal, arrival_terminal, seat_class, harga, jumlah_seat } = req.body;
+        var sql = `select id from maskapai where nama='${nama}';`
+        conn.query(sql, (err,results) => {
+            if(err) throw err
+            console.log(results)
+            sql = `insert into flight_product set code='${code}', idmaskapai=${results[0].id}, departure_city='${departure_city}',
+                    arrival_city='${arrival_city}', tanggal='${tanggal}', departure_time='${departure_time}', arrival_time='${arrival_time}',
+                    departure_terminal='${departure_terminal}', arrival_terminal='${arrival_terminal}', seat_class='${seat_class}',
+                    harga=${harga}, jumlah_seat=${jumlah_seat};`
+            conn.query(sql, (err1, results1) => {
+                if(err1) throw err1
+                console.log(results1)
+                sql = `select fp.id, code, nama, departure_city, arrival_city, tanggal
+                        departure_time, arrival_time, departure_terminal, arrival_terminal,
+                        seat_class, harga, jumlah_seat
+                        from maskapai m
+                        join flight_product fp
+                        on m.id = fp.idmaskapai;`;
+                conn.query(sql, (err2,results2) => {
+                    if(err2) throw err2
+                    res.send(results2)
+                })
+            })
+        })
     },
     editproduct: (req,res) => {
-
+        var { code, nama, departure_city, arrival_city, tanggal, departure_time, arrival_time,
+            departure_terminal, arrival_terminal, seat_class, harga, jumlah_seat } = req.body;
+        var sql = `select id from maskapai where nama='${nama}';`;
+        conn.query(sql, (err, results) => {
+            if(err) throw err
+            console.log(results)
+            sql = `update flight_product set code='${code}', idmaskapai=${results[0].id}, departure_city='${departure_city}',
+                    arrival_city='${arrival_city}', tanggal='${tanggal}', departure_time='${departure_time}', arrival_time='${arrival_time}',
+                    departure_terminal='${departure_terminal}', arrival_terminal='${arrival_terminal}', seat_class='${seat_class}',
+                    harga=${harga}, jumlah_seat=${jumlah_seat} where id= ${req.params.id};`;
+            conn.query(sql, (err1, results1) => {
+                if(err1) throw err1
+                console.log(results1)
+                sql= `select fp.id, code, nama, departure_city, arrival_city, tanggal
+                        departure_time, arrival_time, departure_terminal, arrival_terminal,
+                        seat_class, harga, jumlah_seat
+                        from maskapai m
+                        join flight_product fp
+                        on m.id = fp.idmaskapai;`; 
+                conn.query(sql, (err2, results2) => {
+                    if(err2) throw err2
+                    res.send(results2)
+                })
+            })
+        })
     },
     deleteproduct: (req, res) => {
-        
+        var productId = req.params.id;
+        var sql = `select * from flight_product where id = ${productId};`;
+        conn.query(sql, (err, results) => {
+            if(err) {
+                return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+            }
+            if(results.length > 0) {
+                sql = `delete from flight_product where id = ${productId};`
+                conn.query(sql, (err1,results1) => {
+                    if(err1) {
+                        return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err1.message });
+                    }
+                    sql = `select fp.id, code, nama, departure_city, arrival_city, tanggal
+                    departure_time, arrival_time, departure_terminal, arrival_terminal,
+                    seat_class, harga, jumlah_seat
+                    from maskapai m
+                    join flight_product fp
+                    on m.id = fp.idmaskapai;`;
+                    conn.query(sql, (err2,results2) => {
+                        if(err2) {
+                            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err2.message });
+                        }
+                        res.send(results2);
+                    })
+                })
+            }
+        })   
     }
 }

@@ -76,7 +76,12 @@ module.exports = {
                     if(err1) throw err1
                     console.log(res1)
                     console.log(results)
-                    res.send(results)
+                    sql = `select * from user where username='${username}' and password='${hashPassword}'`;
+                    conn.query( sql, (err2, res2) => {
+                        if (err2) throw err2;
+                        res.send(res2)
+                    })
+                    
                 })
             }
             else {
@@ -107,18 +112,11 @@ module.exports = {
         })
     },
     keeplogin: (req,res) => {
-        var { username } = req.body;
-        var sql = `select * from user where username='${username}' and password='${hashPassword}'`;
-        conn.query(sql, (err,results)=> {
-            if(err) throw err;
-            // console.log(err)
-            if (results.length > 0){
-                console.log(results)
-                res.send(results)
-            }
-            else {
-                res.send ({status: 'error', message: 'Error!'})
-            } 
+        var sql = `select username from user where username='${req.body.username}';`
+        conn.query(sql, (err, results) => {
+            if (err) throw err;
+            console.log(results)
+            res.send(results)
         })
     }
 }

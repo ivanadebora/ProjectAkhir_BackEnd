@@ -7,6 +7,8 @@ const Crypto = require('crypto');
 const app = express();
 app.use(cors())
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(express.static('public'))
 
 const port = process.env.PORT || 1212;
 
