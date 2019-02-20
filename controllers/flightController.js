@@ -242,5 +242,20 @@ module.exports = {
                 })
             }
         })   
+    },
+    listsearch: (req, res) => {
+        var { departure_city, arrival_city, tanggal, seat_class, jumlah_seat } = req.body;
+        var sql = `select image, nama, departure_city, arrival_city, departure_time, arrival_time, 
+                departure_terminal, arrival_terminal, harga
+                from maskapai m
+                join flight_product fp
+                on m.id = fp.idmaskapai
+                where (departure_city = '${departure_city}' && arrival_city = '${arrival_city}' 
+                && tanggal = '${tanggal}' && seat_class = '${seat_class}' && jumlah_seat >= ${jumlah_seat});`;
+        conn.query(sql, (err,results) => {
+            if(err) throw err;
+            console.log(results);
+            res.send(results);
+        })
     }
 }

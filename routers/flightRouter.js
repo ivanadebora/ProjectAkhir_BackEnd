@@ -13,4 +13,6 @@ router.post('/addproduct', flightController.addproduct)
 router.post('/editproduct/:id', flightController.editproduct)
 router.post('/deleteproduct/:id', flightController.deleteproduct)
 
+router.post('/listsearch', flightController.listsearch)
+
 module.exports = router;
