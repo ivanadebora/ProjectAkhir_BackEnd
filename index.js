@@ -12,6 +12,7 @@ app.use(express.static('public'))
 
 const port = process.env.PORT || 1212;
 
+
 app.get('/', (req,res) => {
     res.send('<h1>Selamat Datang di API!</h1>')
 })

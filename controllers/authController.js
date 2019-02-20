@@ -66,7 +66,7 @@ module.exports = {
             if(err) throw err;
             // console.log(err)
             if (results.length > 0){
-                console.log(results)
+                // console.log(results)
                 // res.send(results)
                 var dataLogin = { 
                     lastlogin: new Date()
