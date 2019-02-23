@@ -17,6 +17,13 @@ app.get('/', (req,res) => {
     res.send('<h1>Selamat Datang di API!</h1>')
 })
 
+app.get('/kuribo', (req,res) => {
+    var namaku = req.query.nama
+    res.send(`<h1>Halo, ${namaku}</h1>`)
+    // console.log(req.query.susanto)
+    // res.send(`<h1>${req.query.kirito}</h1>`)
+})
+
 
 app.get('/passwordencrypt', (req,res) => {
     var hashPassword = Crypto.createHmac('sha256', 'abc123').update(req.query.password).digest('hex');
