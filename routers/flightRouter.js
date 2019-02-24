@@ -14,9 +14,12 @@ router.post('/editproduct/:id', flightController.editproduct)
 router.post('/deleteproduct/:id', flightController.deleteproduct)
 
 router.post('/listsearch', flightController.listsearch)
-router.post('/listsearch2', flightController.listsearch2)
-router.post('/isicart1', flightController.isicart1)
-router.post('/isicart2', flightController.isicart2)
 router.post('/getdetail', flightController.getdetail)
+router.post('/isicart', flightController.isicart)
+router.post('/lihatcart', flightController.lihatcart)
+router.post('/lihatcartdetail', flightController.lihatcartdetail)
+router.post('/addpassenger', flightController.addpassenger)
+router.post('/listpassenger', flightController.listpassenger)
+
 
 module.exports = router;
