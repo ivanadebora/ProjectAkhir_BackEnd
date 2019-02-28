@@ -1,5 +1,5 @@
-const conn = require('../database');
 const moment = require('moment')
+const conn = require('../database')
 const fs = require('fs');
 const { uploader } = require('../helpers/uploader');
 
@@ -202,7 +202,7 @@ module.exports = {
             conn.query(sql, (err1, results1) => {
                 if(err1) throw err1
                 console.log(results1)
-                sql= `select fp.id, code, nama, departure_city, arrival_city, tanggal
+                sql= `select fp.id, code, nama, departure_city, arrival_city, tanggal,
                         departure_time, arrival_time, departure_terminal, arrival_terminal,
                         seat_class, harga, jumlah_seat, description
                         from maskapai m
@@ -317,7 +317,7 @@ module.exports = {
         })
     },
     lihatcart: (req,res) => {
-        var sql = `select * from flight_cart;`
+        var sql = `select * from flight_cart where username='${req.body.username}';`;
         conn.query(sql, (err,results) => {
             if (err) throw err;
             res.send(results)
@@ -330,11 +330,127 @@ module.exports = {
             res.send(results)
         })
     },
-    listpassenger: (req,res) => {
+    listpassengercart: (req,res) => {
         var sql = `select * from flight_passenger where id_pesanan=${req.body.id};`
         conn.query(sql, (err,results) => {
             if (err) throw err;
             res.send(results)
+        })
+    },
+    addtransaction: (req,res) => {
+        try {
+            const path = '/flights/paidConfirmation/images';
+            const upload = uploader(path, 'FPC').fields([{ name: 'image'}]);
+    
+            upload(req, res, (err) => {
+                if(err){
+                    return res.status(500).json({ message: 'Gagal mengunggah gambar!', error: err.message });
+                }
+    
+                const { image } = req.files;
+                console.log(image)
+                const imagePath = image ? path + '/' + image[0].filename : null;
+                console.log(imagePath)
+    
+                console.log(req.body.data)
+                const data = JSON.parse(req.body.data);
+                console.log(data)
+                data.image = imagePath;
+                
+                var sql = `insert into flight_transaction set ?;`;
+                conn.query(sql, data, (err, results) => {
+                    if(err) {
+                        console.log(err.message)
+                        fs.unlinkSync('./public' + imagePath);
+                        return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+                    }
+                    console.log(results);
+                    res.send(results) 
+                })
+                     
+            })
+        } catch(err) {
+            return res.status(500).json({ message: "There's an error on the server. Please contact the administrator.", error: err.message });
+        }
+    },
+    updatepassenger: (req, res) => {
+        var { id_pesanan, id_transaksi} = req.body;
+        var sql = `update flight_passenger set id_transaksi=${id_transaksi} where id_pesanan=${id_pesanan};`;
+        conn.query(sql, (err,results) => {
+            if (err) throw err
+            res.send(results)
+        })
+    },
+    deletecart: (req, res) => {
+        var { id, username, flight_productId } = req.body;
+        var sql = `select qty from flight_cart where id=${id} and username='${username}';`;
+        conn.query(sql, (err,results) => {
+            if (err) throw err
+            console.log(results)
+            var jumlah_penumpang = results[0].qty;
+            sql = `select jumlah_seat from flight_product where id=${flight_productId};`;
+            conn.query(sql, (err1, results1) => {
+                if (err1) throw err1
+                console.log(results1)
+                var jumlah_stock = results1[0].jumlah_seat;
+                var sisa_stock = (jumlah_stock - jumlah_penumpang)
+                console.log(sisa_stock)
+                sql = `update flight_product set jumlah_seat=${sisa_stock} where id=${flight_productId}`
+                conn.query(sql, (err2, results2) => {
+                    if (err2) throw err2
+                    console.log(results2)
+                    console.log(id)
+                    sql = `delete from flight_cart where id=${id};`
+                    conn.query(sql, (err3, results3) => {
+                        if (err3) throw err3
+                        console.log(results3)
+                    })
+                })
+            })
+        })
+        var sql = `delete from flight_cart where id=${id} and username='${username}';`;
+        conn.query(sql,(err, results) => {
+            if (err) throw err
+            res.send(results)
+        })
+    },
+    listhistory: (req,res) => {
+        var sql = `select * from flight_transaction where username='${req.body.username}';`
+        conn.query(sql, (err,results) => {
+            if (err) throw err
+            res.send(results)
+        })
+    },
+    listhistorydetail: (req,res) => {
+        var sql = `select * from flight_transaction where username='${req.body.username}' and id = ${req.body.id};`
+        conn.query(sql, (err,results) => {
+            if (err) throw err;
+            res.send(results)
+        })
+    },
+    listpassengerhistory: (req,res) => {
+        var sql = `select * from flight_passenger where id_transaksi=${req.body.id};`
+        conn.query(sql, (err,results) => {
+            if (err) throw err;
+            res.send(results)
+        })
+    },
+    paymentgettrans: (req,res) => {
+        var sql = `select * from flight_transaction;`;
+        conn.query(sql, (err,results) => {
+            if (err) throw err;
+            res.send(results)
+        })
+    },
+    editpaymentstatus: (req,res) => {
+        var sql = `update flight_transaction set status_transaksi='${req.body.status_transaksi}' where id=${req.params.id};`;
+        conn.query(sql, (err,results) => {
+            if (err) throw err;
+            var sql = `select * from flight_transaction;`;
+            conn.query(sql, (err1, results1) => {
+                if (err1) throw err1;
+                res.send(results1)
+            })
         })
     }
 }

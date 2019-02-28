@@ -113,7 +113,7 @@ module.exports = {
         })
     },
     keeplogin: (req,res) => {
-        var sql = `select username from user where username='${req.body.username}';`
+        var sql = `select * from user where username='${req.body.username}';`
         conn.query(sql, (err, results) => {
             if (err) throw err;
             console.log(results)
