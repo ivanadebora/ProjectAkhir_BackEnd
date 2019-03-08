@@ -148,6 +148,13 @@ module.exports = {
             }
         })   
     },
+    listkota: (req, res) => {
+        var sql = `select nama_kota from flight_kota order by nama_kota;`
+        conn.query(sql, (err, results) => {
+            if(err) throw err;
+            res.send(results);
+        })
+    },
     listproduct: (req, res) => {
         var sql = `select fp.id, code, nama, departure_city, arrival_city, tanggal,
                     departure_time, arrival_time, departure_terminal, arrival_terminal,
@@ -415,7 +422,7 @@ module.exports = {
         })
     },
     listhistory: (req,res) => {
-        var sql = `select * from flight_transaction where username='${req.body.username}';`
+        var sql = `select * from flight_transaction where username='${req.body.username}' order by tanggal_konfirmasi desc;`
         conn.query(sql, (err,results) => {
             if (err) throw err
             res.send(results)

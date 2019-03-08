@@ -8,6 +8,8 @@ router.post('/addmaskapai', flightController.addmaskapai)
 router.post('/editmaskapai/:id', flightController.editmaskapai)
 router.post('/deletemaskapai/:id', flightController.deletemaskapai)
 
+router.get('/listkota', flightController.listkota)
+
 router.get('/listproduct', flightController.listproduct)
 router.post('/addproduct', flightController.addproduct)
 router.post('/editproduct/:id', flightController.editproduct)

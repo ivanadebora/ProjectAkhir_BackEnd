@@ -42,3 +42,5 @@ select * from flight_product fp
                     where fp.id = 3;
 
 delete from flight_transaction where id = 2;
+
+select nama_kota from flight_kota order by nama_kota;
