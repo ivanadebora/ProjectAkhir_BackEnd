@@ -266,6 +266,66 @@ module.exports = {
             res.send(results);
         })
     },
+    listsearchmaxprice: (req, res) => {
+        var { departure_city, arrival_city, tanggal, seat_class, qty } = req.body;
+        var sql = `select fp.id, code, image, nama, departure_city, arrival_city, departure_time, arrival_time, 
+                    departure_terminal, arrival_terminal, harga, seat_class, tanggal
+                    from maskapai m
+                    join flight_product fp
+                    on m.id = fp.idmaskapai
+                    where departure_city = '${departure_city}' and arrival_city = '${arrival_city}' 
+                    and tanggal = '${tanggal}' and seat_class = '${seat_class}' and jumlah_seat >= ${qty} order by harga desc;`;
+        conn.query(sql, (err, results) => {
+            if(err) throw err;
+            console.log(results);
+            res.send(results);
+        })             
+    },
+    listsearchminprice: (req, res) => {
+        var { departure_city, arrival_city, tanggal, seat_class, qty } = req.body;
+        var sql = `select fp.id, code, image, nama, departure_city, arrival_city, departure_time, arrival_time, 
+                    departure_terminal, arrival_terminal, harga, seat_class, tanggal
+                    from maskapai m
+                    join flight_product fp
+                    on m.id = fp.idmaskapai
+                    where departure_city = '${departure_city}' and arrival_city = '${arrival_city}' 
+                    and tanggal = '${tanggal}' and seat_class = '${seat_class}' and jumlah_seat >= ${qty} order by harga;`;
+        conn.query(sql, (err, results) => {
+            if(err) throw err;
+            console.log(results);
+            res.send(results);
+        })             
+    },
+    listsearchtimeawal: (req, res) => {
+        var { departure_city, arrival_city, tanggal, seat_class, qty } = req.body;
+        var sql = `select fp.id, code, image, nama, departure_city, arrival_city, departure_time, arrival_time, 
+                    departure_terminal, arrival_terminal, harga, seat_class, tanggal
+                    from maskapai m
+                    join flight_product fp
+                    on m.id = fp.idmaskapai
+                    where departure_city = '${departure_city}' and arrival_city = '${arrival_city}' 
+                    and tanggal = '${tanggal}' and seat_class = '${seat_class}' and jumlah_seat >= ${qty} order by departure_time;`;
+        conn.query(sql, (err, results) => {
+            if(err) throw err;
+            console.log(results);
+            res.send(results);
+        })             
+    },
+    listsearchtimeakhir: (req, res) => {
+        var { departure_city, arrival_city, tanggal, seat_class, qty } = req.body;
+        var sql = `select fp.id, code, image, nama, departure_city, arrival_city, departure_time, arrival_time, 
+                    departure_terminal, arrival_terminal, harga, seat_class, tanggal
+                    from maskapai m
+                    join flight_product fp
+                    on m.id = fp.idmaskapai
+                    where departure_city = '${departure_city}' and arrival_city = '${arrival_city}' 
+                    and tanggal = '${tanggal}' and seat_class = '${seat_class}' and jumlah_seat >= ${qty} order by departure_time desc;`;
+        conn.query(sql, (err, results) => {
+            if(err) throw err;
+            console.log(results);
+            res.send(results);
+        })             
+    },
     getdetail: (req, res) => {
         var {product_id} = req.body
         console.log(product_id)
@@ -324,7 +384,7 @@ module.exports = {
         })
     },
     lihatcart: (req,res) => {
-        var sql = `select * from flight_cart where username='${req.body.username}';`;
+        var sql = `select * from flight_cart where username='${req.body.username}' order by tanggal_pesan desc;`;
         conn.query(sql, (err,results) => {
             if (err) throw err;
             res.send(results)

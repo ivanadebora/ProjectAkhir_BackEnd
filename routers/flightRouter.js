@@ -18,6 +18,11 @@ router.post('/deleteproduct/:id', flightController.deleteproduct)
 router.post('/listsearch', flightController.listsearch)
 router.post('/getdetail', flightController.getdetail)
 
+router.post('/listsearchmaxprice', flightController.listsearchmaxprice)
+router.post('/listsearchminprice', flightController.listsearchminprice)
+router.post('/listsearchtimeawal', flightController.listsearchtimeawal)
+router.post('/listsearchtimeakhir', flightController.listsearchtimeakhir)
+
 router.post('/isicart', flightController.isicart)
 router.post('/lihatcart', flightController.lihatcart)
 router.post('/lihatcartdetail', flightController.lihatcartdetail)

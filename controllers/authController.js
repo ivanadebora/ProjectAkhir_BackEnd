@@ -32,9 +32,7 @@ module.exports = {
                     if(err1) {
                         throw err1
                     }
-                    res.send({
-                        username
-                    })
+                    // res.send(res1)
                     var linkverifikasi = `http://localhost:3000/verified?username=${username}&password=${hashPassword}`;
                     var mailOption = {
                         from: 'TravelID <travelid2019@gmail.com>',
@@ -52,8 +50,13 @@ module.exports = {
                         }
                         else {
                             // res.send('Success')
-                            res.send({username, email, password, role:'User', status:'Unverified'})
+                            res.send({username, email, password: hashPassword, role:'User', status:'Unverified'})
                         }
+                    })
+                    sql = `select * from user where username='${username}' and password='${hashPassword}'`;
+                    conn.query( sql, (err3, res3) => {
+                        if (err3) throw err3;
+                        res.send(res3)
                     })
                 })
             }
@@ -88,6 +91,37 @@ module.exports = {
             else {
                 res.send ({status: 'error', message: 'Username or password invalid'})
             } 
+        })
+    },
+    resendmail: (req,res) => {
+        var { username, password } = req.body;
+        var sql = `select * from user where username='${username}' and password='${password}'`;
+        conn.query(sql, (err,results) => {
+            if(err) {
+                throw err
+            }
+            res.send(results)
+            var email = results[0].email
+            var linkverifikasi = `http://localhost:3000/verified?username=${username}&password=${password}`;
+                    var mailOption = {
+                        from: 'TravelID <travelid2019@gmail.com>',
+                        to: email,
+                        subject: 'Verifikasi Email',
+                        html: `Hi ${username}, 
+                        Your user account with the e-mail address ${email} has been created. 
+                        <br/>
+                        Please follow the link below to activate your account.  : <a href="${linkverifikasi}">Click here!</a>`
+                    }
+                    transporter.sendMail(mailOption, (err2, res2) => {
+                        if(err2) {
+                            console.log(err2)
+                            throw err2
+                        }
+                        else {
+                            res.send('Success')
+                            console.log('Success!')
+                        }
+                    })
         })
     },
     verified: (req,res) => {
