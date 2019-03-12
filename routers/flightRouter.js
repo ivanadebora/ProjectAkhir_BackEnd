@@ -3,19 +3,9 @@ const router = express.Router();
 const { flightController } = require('../controllers');
 
 
-router.get('/listmaskapai', flightController.listmaskapai)
-router.post('/addmaskapai', flightController.addmaskapai)
-router.post('/editmaskapai/:id', flightController.editmaskapai)
-router.post('/deletemaskapai/:id', flightController.deletemaskapai)
-
-router.get('/listkota', flightController.listkota)
-
-router.get('/listproduct', flightController.listproduct)
-router.post('/addproduct', flightController.addproduct)
-router.post('/editproduct/:id', flightController.editproduct)
-router.post('/deleteproduct/:id', flightController.deleteproduct)
-
 router.post('/listsearch', flightController.listsearch)
+router.get('/listkota', flightController.listkota)
+router.get('/listmaskapai', flightController.listmaskapai)
 router.post('/getdetail', flightController.getdetail)
 
 router.post('/listsearchmaxprice', flightController.listsearchmaxprice)
@@ -39,6 +29,10 @@ router.post('/listhistorydetail', flightController.listhistorydetail)
 
 router.post('/paymentgettrans', flightController.paymentgettrans)
 router.post('/editpaymentstatus/:id', flightController.editpaymentstatus)
+
+router.post('/acceptedmailsend/:id', flightController.acceptedmailsend)
+router.post('/deniedmailsend/:id', flightController.deniedmailsend)
+router.post('/stockupdate/:id', flightController.stockupdate)
 
 
 module.exports = router;

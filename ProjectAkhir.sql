@@ -43,7 +43,7 @@ select * from flight_product fp
 
 delete from flight_transaction where id = 2;
 delete from flight_passenger where id = 4;
-delete from flight_cart where id = 4;
+delete from flight_cart where id = 17;
 
 
 select nama_kota from flight_kota order by nama_kota;

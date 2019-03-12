@@ -103,25 +103,25 @@ module.exports = {
             res.send(results)
             var email = results[0].email
             var linkverifikasi = `http://localhost:3000/verified?username=${username}&password=${password}`;
-                    var mailOption = {
-                        from: 'TravelID <travelid2019@gmail.com>',
-                        to: email,
-                        subject: 'Verifikasi Email',
-                        html: `Hi ${username}, 
-                        Your user account with the e-mail address ${email} has been created. 
-                        <br/>
-                        Please follow the link below to activate your account.  : <a href="${linkverifikasi}">Click here!</a>`
-                    }
-                    transporter.sendMail(mailOption, (err2, res2) => {
-                        if(err2) {
-                            console.log(err2)
-                            throw err2
-                        }
-                        else {
-                            res.send('Success')
-                            console.log('Success!')
-                        }
-                    })
+            var mailOption = {
+                from: 'TravelID <travelid2019@gmail.com>',
+                to: email,
+                subject: 'Verifikasi Email',
+                html: `Hi ${username}, 
+                Your user account with the e-mail address ${email} has been created. 
+                <br/>
+                Please follow the link below to activate your account.  : <a href="${linkverifikasi}">Click here!</a>`
+            }
+            transporter.sendMail(mailOption, (err2, res2) => {
+                if(err2) {
+                    console.log(err2)
+                    throw err2
+                }
+                else {
+                    res.send('Success')
+                    console.log('Success!')
+                }
+            })
         })
     },
     verified: (req,res) => {
