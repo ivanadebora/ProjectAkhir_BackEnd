@@ -27,11 +27,13 @@ app.get('/passwordencrypt', (req,res) => {
 var { 
     authRouter,
     flightRouter,
-    productFlightRouter
+    productFlightRouter,
+    paymentFlightRouter
 } = require('./routers')
 app.use('/auth', authRouter)
 app.use('/flight', flightRouter)
 app.use('/admin/flight/product', productFlightRouter)
+app.use('/admin/flight/payment', paymentFlightRouter)
 
 
 app.listen(port, () => console.log('API aktif di port ' + port))

@@ -27,12 +27,5 @@ router.post('/addtransaction', flightController.addtransaction)
 router.post('/lihathistory', flightController.listhistory)
 router.post('/listhistorydetail', flightController.listhistorydetail)
 
-router.post('/paymentgettrans', flightController.paymentgettrans)
-router.post('/editpaymentstatus/:id', flightController.editpaymentstatus)
-
-router.post('/acceptedmailsend/:id', flightController.acceptedmailsend)
-router.post('/deniedmailsend/:id', flightController.deniedmailsend)
-router.post('/stockupdate/:id', flightController.stockupdate)
-
 
 module.exports = router;
