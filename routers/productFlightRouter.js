@@ -16,4 +16,11 @@ router.post('/addproduct', productFlightController.addproduct)
 router.post('/editproduct/:id', productFlightController.editproduct)
 router.post('/deleteproduct/:id', productFlightController.deleteproduct)
 
+router.get('/tiketterjual', productFlightController.tiketterjual)
+router.get('/tiketsisa', productFlightController.tiketsisa)
+router.get('/tiketonwaiting', productFlightController.tiketonwaiting)
+
+router.get('/totalflight', productFlightController.totalflight)
+
+
 module.exports = router;

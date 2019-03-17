@@ -257,5 +257,33 @@ module.exports = {
                 })
             }
         })   
+    },
+    tiketterjual: (req,res) => {
+        var sql = `select sum(qty) as hasil from flight_transaction where status_transaksi='Pembayaran Berhasil';`
+        conn.query(sql, (err,results) => {
+            if (err) throw err
+            res.send(results)
+        })
+    },
+    tiketsisa: (req,res) => {
+        var sql = `select sum(jumlah_seat) as hasil from flight_product;`
+        conn.query(sql, (err, results) => {
+            if (err) throw err
+            res.send(results)
+        })
+    },
+    tiketonwaiting: (req,res) => {
+        var sql = `select sum(qty) as hasil from flight_transaction where status_transaksi='Menunggu Persetujuan Pembayaran';`
+        conn.query(sql, (err, results) => {
+            if (err) throw err
+            res.send(results)
+        })
+    },
+    totalflight: (req,res) => {
+        var sql = `select count(*) as hasil from flight_product;`
+        conn.query(sql, (err,results) => {
+            if (err) throw err
+            res.send(results)
+        })
     }
 }
