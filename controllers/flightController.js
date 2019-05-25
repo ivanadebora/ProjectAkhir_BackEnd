@@ -4,8 +4,6 @@ const fs = require('fs');
 const { uploader } = require('../helpers/uploader');
 
 
-
-
 module.exports = {
     listkota: (req, res) => {
         var sql = `select nama_kota from flight_kota order by nama_kota;`
